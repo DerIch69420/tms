@@ -12,7 +12,6 @@ pub fn parse(input: &str) -> Result<Program, String> {
         }
 
         if let Some(rest) = line.strip_prefix("session ") {
-            // trim_matches takes chars or closures, not strings!
             let value = rest.trim().trim_matches('"').to_string();
             let expr = Expression::Literal(value);
             statements.push(Statement::Session(expr));

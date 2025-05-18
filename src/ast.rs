@@ -5,6 +5,7 @@ pub struct Program {
 
 #[derive(Debug)]
 pub enum Statement {
+    Bash(Expression),
     Session(Expression),
 }
 

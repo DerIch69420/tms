@@ -1,4 +1,4 @@
-use crate::ast::{Program, Statement, Expression};
+use crate::ast::{Expression, Program, Statement};
 
 pub fn parse(input: &str) -> Result<Program, String> {
     let mut statements = Vec::new();
@@ -20,10 +20,14 @@ pub fn parse(input: &str) -> Result<Program, String> {
             let value = rest.trim().trim_matches('"').to_string();
             let expr = Expression::Literal(value);
             statements.push(Statement::Bash(expr));
-        } else if let Some(rest) = line.strip_prefix("session ") {
+        } else if let Some(rest) = line.strip_prefix("session") {
             let value = rest.trim().trim_matches('"').to_string();
             let expr = Expression::Literal(value);
             statements.push(Statement::Session(expr));
+        } else if let Some(rest) = line.strip_prefix("attach") {
+            let value = rest.trim().trim_matches('"').to_string();
+            let expr = Expression::Literal(value);
+            statements.push(Statement::Attach(expr));
         } else if !line.is_empty() {
             return Err(format!("Unknown statement: {line}"));
         }
@@ -31,4 +35,3 @@ pub fn parse(input: &str) -> Result<Program, String> {
 
     Ok(Program { statements })
 }
-

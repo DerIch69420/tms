@@ -1,6 +1,6 @@
-mod parser;
-mod interpreter;
 mod ast;
+mod interpreter;
+mod parser;
 
 use std::env;
 use std::fs;
@@ -12,4 +12,3 @@ fn main() {
     let program = parser::parse(&source).expect("Parsing failed.");
     interpreter::run(program);
 }
-

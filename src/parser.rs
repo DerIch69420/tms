@@ -1,5 +1,14 @@
 use crate::ast::{Expression, Program, Statement};
 
+fn extract_quoted_literal(input: &str) -> Result<String, String> {
+    let input = input.trim();
+    if input.starts_with('"') && input.ends_with('"') && input.len() >= 2 {
+        Ok(input[1..input.len() - 1].to_string())
+    } else {
+        Err(format!("Expected quoted string, got: {input}"))
+    }
+}
+
 pub fn parse(input: &str) -> Result<Program, String> {
     let mut statements = Vec::new();
 
@@ -17,17 +26,14 @@ pub fn parse(input: &str) -> Result<Program, String> {
         }
 
         if let Some(rest) = line.strip_prefix("bash") {
-            let value = rest.trim().trim_matches('"').to_string();
-            let expr = Expression::Literal(value);
-            statements.push(Statement::Bash(expr));
+            let value = extract_quoted_literal(rest)?;
+            statements.push(Statement::Bash(Expression::Literal(value)));
         } else if let Some(rest) = line.strip_prefix("session") {
-            let value = rest.trim().trim_matches('"').to_string();
-            let expr = Expression::Literal(value);
-            statements.push(Statement::Session(expr));
+            let value = extract_quoted_literal(rest)?;
+            statements.push(Statement::Session(Expression::Literal(value)));
         } else if let Some(rest) = line.strip_prefix("attach") {
-            let value = rest.trim().trim_matches('"').to_string();
-            let expr = Expression::Literal(value);
-            statements.push(Statement::Attach(expr));
+            let value = extract_quoted_literal(rest)?;
+            statements.push(Statement::Attach(Expression::Literal(value)));
         } else if !line.is_empty() {
             return Err(format!("Unknown statement: {line}"));
         }

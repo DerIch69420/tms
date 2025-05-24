@@ -1,0 +1,7 @@
+#!/usr/bin/env tms
+
+// create new session named tms
+session "tms" 
+
+// attach to tmux session
+attach

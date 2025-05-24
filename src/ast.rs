@@ -7,6 +7,8 @@ pub struct Program {
 pub enum Statement {
     Bash(Expression),
     Session(Expression),
+    Attach(Expression),
+    Window(Expression, Expression),
 }
 
 #[derive(Debug)]

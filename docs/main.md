@@ -18,13 +18,28 @@ Start a line with "//" to make it a comment
 ## Bash commands
 Start a line with ```bash``` to execute the following content as a bash command
 ```
-bash echo Hi!
 bash "mkdir new-dir"
 ```
 
 ## New Session
 Add the following line to create a new session named my-session
 ```
-session my-session
 session "new-session"
+```
+
+## Attach to session
+```
+attach
+```
+
+## Windows
+```
+window "code"
+window "git"
+```
+
+## Execute it
+```
+chmod +x tmux.tms 
+./tmux.tms
 ```

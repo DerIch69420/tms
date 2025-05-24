@@ -3,5 +3,10 @@
 // create new session named tms
 session "tms" 
 
+// create windows
+window "code"
+window "cargo"
+window "git"
+
 // attach to tmux session
 attach

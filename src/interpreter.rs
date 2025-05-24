@@ -20,9 +20,9 @@ pub fn run(program: Program) {
                 let Expression::Literal(val) = expr;
                 let output = Command::new("tmux")
                     .arg("new-session")
-                    .arg("-d") // run detached
+                    .arg("-d")
                     .arg("-s")
-                    .arg(val) // name of the session
+                    .arg(&val)
                     .output()
                     .expect("Failed to start tmux session");
 
@@ -41,6 +41,23 @@ pub fn run(program: Program) {
 
                 if !status.success() {
                     eprintln!("tmux attach failed with code {:?}", status.code());
+                }
+            }
+
+            Statement::Window(name, expr) => {
+                let Expression::Literal(name) = name;
+                let Expression::Literal(val) = expr;
+                let status = Command::new("tmux")
+                    .arg("new-window")
+                    .arg("-t")
+                    .arg(name)
+                    .arg("-n")
+                    .arg(val)
+                    .status()
+                    .expect("Failed to run new-window");
+
+                if !status.success() {
+                    eprintln!("tmux new-window failed with code {:?}", status.code());
                 }
             }
         }

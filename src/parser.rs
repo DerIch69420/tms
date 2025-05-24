@@ -20,12 +20,16 @@ pub fn parse(input: &str) -> Result<Program, String> {
         // skip shebang, comments and empty lines
         if line.starts_with("#!") || line.starts_with("//") || line.is_empty() {
             continue;
-        }
+        } else
 
+        // bash commands
         if let Some(rest) = line.strip_prefix("bash") {
             let value = extract_quoted_literal(rest)?;
             statements.push(Statement::Bash(Expression::Literal(value)));
-        } else if let Some(rest) = line.strip_prefix("session") {
+        } else
+
+        // session creation and attaching
+        if let Some(rest) = line.strip_prefix("session") {
             let value = extract_quoted_literal(rest)?;
 
             if session_name.is_some() {
@@ -44,11 +48,29 @@ pub fn parse(input: &str) -> Result<Program, String> {
                     return Err("Attach statement found but no session declared yet.".to_string());
                 }
             }
-        } else {
+        } else
+
+        // window creation
+        if let Some(rest) = line.strip_prefix("window") {
+            let value = extract_quoted_literal(rest)?;
+            match &session_name {
+                Some(name) => {
+                    statements.push(Statement::Window(
+                        Expression::Literal(name.clone()),
+                        Expression::Literal(value),
+                    ));
+                }
+                None => {
+                    return Err("No session defined yet.".to_string());
+                }
+            }
+            continue;
+        } else
+
+        if !line.is_empty() {
             return Err(format!("Unknown statement: {line}"));
         }
     }
 
     Ok(Program { statements })
 }
-
